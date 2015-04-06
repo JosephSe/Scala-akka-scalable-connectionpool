@@ -44,9 +44,22 @@ class ConnectionPool extends Actor {
   }
 
   def addConnection() = {
+    val size = router.routees.size
+    if (size < max) {
+      val connection = context.actorOf(Props(new Connection((size + 1).toString)))
+      context watch connection
+      router = router.addRoutee(connection)
+    }
+    printRoutes()
   }
 
   def removeConnection() = {
+  }
+
+  def printRoutes(): Unit = {
+    val size = router.routees.size
+
+    println(s"Total connections $size")
   }
 }
 
