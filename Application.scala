@@ -27,6 +27,16 @@ class ConnectionPool extends Actor {
   val max = 10
   var count = 0
 
+  var router = {
+    val initialPoolSize = 1
+    val initialRoutees = Seq.fill(initialPoolSize) {
+      val worker = context.actorOf(Props(new Connection(1.toString)))
+      context watch worker
+      ActorRefRoutee(worker)
+    }
+    Router(RoundRobinRoutingLogic(), initialRoutees.toIndexedSeq)
+  }
+
   override def receive: Actor.Receive = {
     case OpenConnection => openNewConnection()
     case CloseConnection => closeConnection()
