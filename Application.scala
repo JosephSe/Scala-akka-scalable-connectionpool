@@ -54,6 +54,12 @@ class ConnectionPool extends Actor {
   }
 
   def removeConnection() = {
+    println("")
+    val headRef = router.routees.head.asInstanceOf[ActorRefRoutee].ref
+    headRef ! PoisonPill
+    context unwatch headRef
+    router = router.removeRoutee(headRef)
+    printRoutes
   }
 
   def printRoutes(): Unit = {
