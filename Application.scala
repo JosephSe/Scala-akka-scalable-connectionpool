@@ -38,19 +38,15 @@ class ConnectionPool extends Actor {
   }
 
   override def receive: Actor.Receive = {
-    case OpenConnection => openNewConnection()
-    case CloseConnection => closeConnection()
+    case OpenConnection => addConnection()
+    case CloseConnection => removeConnection()
+    case mess: AnyRef => router.route(mess, sender())
   }
 
-  def openNewConnection() = {
-    if(count < max) {
-      count += 1
-
-    }
+  def addConnection() = {
   }
 
-  def closeConnection() = {
-
+  def removeConnection() = {
   }
 }
 
