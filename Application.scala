@@ -24,8 +24,6 @@ class Connection(id: String) extends Actor {
 }
 
 class ConnectionPool extends Actor {
-  val max = 10
-  var count = 0
 
   var router = {
     val initialPoolSize = 1
