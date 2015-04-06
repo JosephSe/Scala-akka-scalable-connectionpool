@@ -23,3 +23,24 @@ class Connection(id: String) extends Actor {
 
 }
 
+class ConnectionPool extends Actor {
+  val max = 10
+  var count = 0
+
+  override def receive: Actor.Receive = {
+    case OpenConnection => openNewConnection()
+    case CloseConnection => closeConnection()
+  }
+
+  def openNewConnection() = {
+    if(count < max) {
+      count += 1
+
+    }
+  }
+
+  def closeConnection() = {
+
+  }
+}
+
