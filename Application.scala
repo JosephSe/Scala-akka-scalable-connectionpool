@@ -9,5 +9,17 @@ class Connection(id: String) extends Actor {
     case _ => println(s"Message recieved : $id")
   }
 
+  @throws[Exception](classOf[Exception])
+  override def preStart(): Unit = {
+    super.preStart()
+    println("Opening Connection")
+  }
+
+  @throws[Exception](classOf[Exception])
+  override def postStop(): Unit = {
+    super.postStop()
+    println("Closing Connection")
+  }
+
 }
 
