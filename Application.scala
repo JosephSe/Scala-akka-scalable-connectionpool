@@ -1,29 +1,34 @@
-import akka.actor.Actor
-import akka.actor.Actor.Receive
+import akka.actor._
+import akka.routing.{ActorRefRoutee, RoundRobinRoutingLogic, Router}
 
 case class OpenConnection()
+
 case class CloseConnection()
+
+case class Process(message: String)
+
 
 class Connection(id: String) extends Actor {
   override def receive: Receive = {
-    case _ => println(s"Message recieved : $id")
+    case mess: Process => println(s"Message recieved : $id - ${mess.message}")
+      Thread.sleep(1000)
   }
 
   @throws[Exception](classOf[Exception])
   override def preStart(): Unit = {
     super.preStart()
-    println("Opening Connection")
+    println(s"Opening Connection $id")
   }
 
   @throws[Exception](classOf[Exception])
   override def postStop(): Unit = {
     super.postStop()
-    println("Closing Connection")
+    println(s"Closing Connection : $id")
   }
 
 }
 
-class ConnectionPool extends Actor {
+class ConnectionPool(max: Integer = 10) extends Actor {
 
   var router = {
     val initialPoolSize = 1
