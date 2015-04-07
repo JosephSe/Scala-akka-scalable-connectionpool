@@ -67,3 +67,24 @@ class ConnectionPool extends Actor {
   }
 }
 
+object Application extends App {
+  var system = ActorSystem.create("connectionPool")
+  var connectionPool = system.actorOf(Props(new ConnectionPool))
+  connectionPool ! Process("test1")
+  connectionPool ! OpenConnection
+  connectionPool ! OpenConnection
+  connectionPool ! OpenConnection
+  1 until 10 foreach { i =>
+    connectionPool ! Process(s"test 2-$i")
+  }
+  connectionPool ! Process("test3")
+  connectionPool ! CloseConnection
+  connectionPool ! CloseConnection
+  connectionPool ! CloseConnection
+  1 until 10 foreach { i =>
+    connectionPool ! Process(s"test 4-$i")
+  }
+  1 until 10 foreach { i =>
+    connectionPool ! Process(s"test 2-$i")
+  }
+}
